@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, Alert } from 'react-native';
+import { View, Text, StyleSheet, Button, Alert, ScrollView } from 'react-native';
 import Card from '../components/Card';
 import NumberContainer from '../components/NumberContainer';
 const generateRandomNumber = (min, max, exclude ) => {
@@ -13,7 +13,9 @@ const generateRandomNumber = (min, max, exclude ) => {
     }
 }
 const GameScreen = props => {
-    const [currentGuess, setCurrentGuess] = useState(generateRandomNumber(1, 100, props.userChoice));
+    const guessedNumber = generateRandomNumber(1, 100, props.userChoice);
+    const [currentGuess, setCurrentGuess] = useState(guessedNumber);
+    const [pastGuesses, setPastGuesses] = useState([guessedNumber]);
     const [rounds, setRounds] = useState(0)
     const currentLow = useRef(1);
     const currentHigh = useRef(100);
@@ -24,13 +26,14 @@ const GameScreen = props => {
             return
         }
         if(direction === 'Lower'){
-            currentHigh.current = currentGuess;
+            currentHigh.current = currentGuess + 1;
         }else {
             currentLow.current = currentGuess;
         }
-
-        setCurrentGuess(generateRandomNumber(currentLow.current, currentHigh.current, currentGuess));
-        setRounds(curRounds => curRounds+1);
+        const guessedNewNo = generateRandomNumber(currentLow.current, currentHigh.current, currentGuess);
+        setCurrentGuess(guessedNewNo);
+        setPastGuesses(curPastGuess => [guessedNewNo,...pastGuesses]);
+        setRounds(pastGuesses.length+1);
     }
     const { userChoice, onGameOver } = props;
     useEffect(() => {
@@ -45,6 +48,16 @@ const GameScreen = props => {
                 <Button title="LOWER" onPress={() => NextHandler('Lower')} />
                 <Button title="GREATER" onPress={() => NextHandler('Greater')} />
            </Card>
+           <View style={styles.list}>
+           <ScrollView>
+           {pastGuesses.map((guess, index) => (
+                                    <View key={index+1} style={styles.listItem }>
+                                        <Text>#{index+1}</Text>
+                                        <Text>{guess}</Text>
+                                        </View>
+                                        ))}
+           </ScrollView>
+           </View>
        </View>
       
     )
@@ -63,6 +76,20 @@ const styles = StyleSheet.create({
         justifyContent:'space-around',
         width:300,
         maxWidth:'80%'
+    },
+    listItem:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        borderColor:'#808080',
+        borderRadius:10,
+        borderWidth:1,
+        padding:15,
+        marginVertical:10
+    },
+    list:{
+        flex:1,
+        width:'80%',
+        
     }
 });
 

@@ -3,8 +3,8 @@ import {Text, View, StyleSheet} from 'react-native';
 
 const Header = props => {
     return (
-        <View {...props.style} style={styles.header}>
-            <Text style={styles.headerText}>{props.title}</Text>
+        <View style={styles.header}>
+            <Text {...props.style} style={styles.headerText}>{props.title}</Text>
         </View>
     );
 }
