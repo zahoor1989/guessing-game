@@ -48,8 +48,8 @@ const GameScreen = props => {
                 <Button title="LOWER" onPress={() => NextHandler('Lower')} />
                 <Button title="GREATER" onPress={() => NextHandler('Greater')} />
            </Card>
-           <View style={styles.list}>
-           <ScrollView>
+           <View style={styles.listContainer}>
+           <ScrollView contentContainerStyle={styles.list}>
            {pastGuesses.map((guess, index) => (
                                     <View key={index+1} style={styles.listItem }>
                                         <Text>#{index+1}</Text>
@@ -84,12 +84,18 @@ const styles = StyleSheet.create({
         borderRadius:10,
         borderWidth:1,
         padding:15,
-        marginVertical:10
+        marginVertical:10,
+        backgroundColor:'#FF337A',
+        width:'100%'
     },
     list:{
+       flexGrow:1,
+       alignItems:'center',
+       justifyContent:'flex-end',
+    },
+    listContainer:{
         flex:1,
         width:'80%',
-        
     }
 });
 
